@@ -9,18 +9,18 @@
     function submitPassword() {
       var pwd = document.getElementById('pwd').value;
 
-      // The hash of the correct password (generate using SHA-256)
-      var correctPasswordHash = 'c685b65d73e9df398e8561ce5aa5ab425b0536f35ff8e4e5d6322e18b0b36c9c'; // replace with your actual hash
+      // The hash of the correct password (from your generated hash)
+      var correctPasswordHash = 'c685b65d73e9df398e8561ce5aa5ab425b0536f35ff8e4e5d6322e18b0b36c9c';
 
       // Hash the inputted password using SHA-256
-      var hashedPassword = sha256(pwd);  // Uses the sha256 function below
-
-      // Check if the hash matches the correct password hash
-      if (hashedPassword === correctPasswordHash) {
-        displayProtectedContent();
-      } else {
-        alert("Incorrect password.");
-      }
+      sha256(pwd).then(hashedPassword => {
+        // Check if the hash matches the correct password hash
+        if (hashedPassword === correctPasswordHash) {
+          displayProtectedContent();
+        } else {
+          alert("Incorrect password.");
+        }
+      });
     }
 
     // Display protected content if password is correct
