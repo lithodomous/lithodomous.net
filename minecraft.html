@@ -4,76 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Protected Content</title>
-  <script>
-    // Simple client-side password validation using SHA-256 (stored hash)
-    function submitPassword() {
-      var pwd = document.getElementById('pwd').value;
-
-      // The hash of the correct password (from your generated hash)
-      var correctPasswordHash = 'c685b65d73e9df398e8561ce5aa5ab425b0536f35ff8e4e5d6322e18b0b36c9c';
-
-      // Hash the inputted password using SHA-256
-      sha256(pwd).then(hashedPassword => {
-        // Log both hashes for debugging
-        console.log("Entered Password Hash:", hashedPassword);
-        console.log("Correct Password Hash:", correctPasswordHash);
-
-        // Check if the hash matches the correct password hash
-        if (hashedPassword === correctPasswordHash) {
-          displayProtectedContent();
-        } else {
-          alert("Incorrect password.");
-        }
-      });
-    }
-
-    // Display protected content if password is correct
-    function displayProtectedContent() {
-      var contentDiv = document.getElementById('content');
-      contentDiv.innerHTML = `
-        <div style="text-align: center;">
-          <h3>Homosexual EX</h3>
-          <h2>play.lithodomous.net</h2>
-          <p>Welcome to my cobblemon server!</p>
-          <div id="server-status"></div>
-          <p><b>Download Mods for CurseForge Import:</b><br>
-            <a href="https://www.dropbox.com/scl/fi/cx666dpak6ufut93i4k7e/Mods-for-Curseforge.zip?rlkey=2y1cbd00k04d56tss3wd3afoj&st=nsz5bpxb&dl=1" target="_blank">Modlist ZIP file</a><br>
-          </p>
-          <h3>Tutorial</h3>
-          <p>Follow these steps to set up your mods:</p>
-          <ol style="text-align: left; display: inline-block;">
-            <li>Download the mods list from dropbox above</li>
-            <li>Install the CurseForge App (https://www.curseforge.com/download/app)</li>
-            <li>Launch the CurseForge app and choose your Minecraft profile.</li>
-            <li>Select import, next to "Create"</li>
-            <li>Select the ZIP file you downloaded above</li>
-            <li>Now your Profile should download and be ready for use</li>
-          </ol>
-        </div>
-      `;
-    }
-
-    // SHA-256 Hashing Function
-    function sha256(message) {
-      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(message)).then(buffer => {
-        return hex(buffer);
-      });
-    }
-
-    // Convert ArrayBuffer to Hexadecimal
-    function hex(buffer) {
-      const hashArray = Array.from(new Uint8Array(buffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-  </script>
 </head>
 <body>
-  <div id="content">
-    <div style="text-align: center;">
-      <h3>Please Enter Password</h3>
-      <input type="password" id="pwd">
-      <button onclick="submitPassword()">Submit</button>
-    </div>
+  <div style="text-align: center;">
+    <h3>Homosexual EX</h3>
+    <h2>play.lithodomous.net</h2>
+    <p>Welcome to my cobblemon server!</p>
+    <div id="server-status"></div>
+
+    <!-- Download Mods Section -->
+    <p><b>Download Mods for CurseForge Import:</b><br>
+      <a href="https://www.dropbox.com/scl/fi/cx666dpak6ufut93i4k7e/Mods-for-Curseforge.zip?rlkey=2y1cbd00k04d56tss3wd3afoj&st=nsz5bpxb&dl=1" target="_blank">Modlist ZIP file</a><br>
+    </p>
+
+    <!-- Tutorial Section -->
+    <h3>Tutorial</h3>
+    <p>Follow these steps to set up your mods:</p>
+    <ol style="text-align: left; display: inline-block;">
+      <li>Download the mods list from Dropbox above</li>
+      <li>Install the CurseForge App (https://www.curseforge.com/download/app)</li>
+      <li>Launch the CurseForge app and choose your Minecraft profile.</li>
+      <li>Select import, next to "Create"</li>
+      <li>Select the ZIP file you downloaded above</li>
+      <li>Now your Profile should download and be ready for use</li>
+    </ol>
   </div>
+
+  <!-- Fetch server status and update the server-status div -->
+  <script>
+    fetch('https://api.mcsrvstat.us/3/play.lithodomous.net')
+      .then(response => response.json())
+      .then(data => {
+        var serverStatusDiv = document.getElementById('server-status');
+        if (data.online) {
+          serverStatusDiv.innerHTML = `
+            <h2><b>Online!</b></h2>
+            <h2>${data.players.online}/${data.players.max}</h2>
+          `;
+        } else {
+          serverStatusDiv.innerHTML = `
+            <h2><b>Server is offline...</b></h2>
+            <p><b>Reason:</b> MAINTENANCE</p>
+          `;
+        }
+      })
+      .catch(err => console.error("Error fetching server status:", err));
+  </script>
 </body>
 </html>
