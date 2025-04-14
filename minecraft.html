@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protected Content</title>
+  <script>
+    // Simple client-side password validation using SHA-256 (stored hash)
+    function submitPassword() {
+      var pwd = document.getElementById('pwd').value;
+
+      // The hash of the correct password (generate using SHA-256)
+      var correctPasswordHash = 'c685b65d73e9df398e8561ce5aa5ab425b0536f35ff8e4e5d6322e18b0b36c9c'; // replace with your actual hash
+
+      // Hash the inputted password using SHA-256
+      var hashedPassword = sha256(pwd);  // Uses the sha256 function below
+
+      // Check if the hash matches the correct password hash
+      if (hashedPassword === correctPasswordHash) {
+        displayProtectedContent();
+      } else {
+        alert("Incorrect password.");
+      }
+    }
+
+    // Display protected content if password is correct
+    function displayProtectedContent() {
+      var contentDiv = document.getElementById('content');
+      contentDiv.innerHTML = `
+        <div style="text-align: center;">
+          <h3>Homosexual EX</h3>
+          <h2>play.lithodomous.net</h2>
+          <p>Welcome to my cobblemon server!</p>
+          <div id="server-status"></div>
+          <p><b>Download Mods for CurseForge Import:</b><br>
+            <a href="https://www.dropbox.com/scl/fi/cx666dpak6ufut93i4k7e/Mods-for-Curseforge.zip?rlkey=2y1cbd00k04d56tss3wd3afoj&st=nsz5bpxb&dl=1" target="_blank">Modlist ZIP file</a><br>
+          </p>
+          <h3>Tutorial</h3>
+          <p>Follow these steps to set up your mods:</p>
+          <ol style="text-align: left; display: inline-block;">
+            <li>Download the mods list from dropbox above</li>
+            <li>Install the CurseForge App (https://www.curseforge.com/download/app)</li>
+            <li>Launch the CurseForge app and choose your Minecraft profile.</li>
+            <li>Select import, next to "Create"</li>
+            <li>Select the ZIP file you downloaded above</li>
+            <li>Now your Profile should download and be ready for use</li>
+          </ol>
+        </div>
+      `;
+    }
+
+    // SHA-256 Hashing Function
+    function sha256(message) {
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(message)).then(buffer => {
+        return hex(buffer);
+      });
+    }
+
+    // Convert ArrayBuffer to Hexadecimal
+    function hex(buffer) {
+      const hashArray = Array.from(new Uint8Array(buffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+  </script>
+</head>
+<body>
+  <div id="content">
+    <div style="text-align: center;">
+      <h3>Please Enter Password</h3>
+      <input type="password" id="pwd">
+      <button onclick="submitPassword()">Submit</button>
+    </div>
+  </div>
+</body>
+</html>
