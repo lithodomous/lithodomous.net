@@ -14,6 +14,10 @@
 
       // Hash the inputted password using SHA-256
       sha256(pwd).then(hashedPassword => {
+        // Log both hashes for debugging
+        console.log("Entered Password Hash:", hashedPassword);
+        console.log("Correct Password Hash:", correctPasswordHash);
+
         // Check if the hash matches the correct password hash
         if (hashedPassword === correctPasswordHash) {
           displayProtectedContent();
