@@ -23,11 +23,38 @@
 <td style="width: 253px; height: 309.5px;">
 <h4 style="text-align: center;"><strong>ABOUT ME</strong></h4>
 <p><img style="float: left; margin-right: 1rem;" src="https://web.archive.org/web/20090831131216/http://geocities.com/ksaaim/Images/dragon12.gif" alt="" width="100" height="93" /></p>
-<p style="font-size: 12px; text-align: left;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p style="font-size: 12px; text-align: left;">
+My name is Jay and I am a <span id="age"></span>
+
+    
+</p>
 <p style="font-size: 12px;"><a title="home" href="https://lithodomous.net/index.html">home</a></p>
 </td>
 </tr>
 </tbody>
 </table>
-  
+
+<script>
+        // Your birth year and month (replace with your actual birth year and month)
+        const birthYear = 2001; // Replace with your birth year
+        const birthMonth = 9;   // Replace with your birth month (1 = January, 12 = December)
+
+        // Function to calculate age
+        function calculateAge(birthYear, birthMonth) {
+            const today = new Date();
+            let age = today.getFullYear() - birthYear;
+            
+            // If the birthday hasn't occurred yet this year, subtract 1 from age
+            if (today.getMonth() + 1 < birthMonth) {
+                age--;
+            }
+
+            return age;
+        }
+
+        // Display the calculated age inside the span with id="age"
+        document.getElementById("age").textContent = calculateAge(birthYear, birthMonth);
+    </script>
+
+    
 </body>
