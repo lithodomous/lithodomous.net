@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Draggable Images with Momentum</title>
+  <title>Draggable Images with Drift</title>
   <style>
     body {
       background-color: black;
@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  <!-- Images to be dragged -->
+  <!-- Draggable images -->
   <img id="image1" src="https://www.dropbox.com/scl/fi/gp3owd52tve3hpv5dnxvv/2025-04-15-BOOMER.gif?rlkey=6y3cwryaqaucj1254ik6ngigc&amp;st=7qvzgr5g&amp;dl=1" 
   alt="BOOMER" width="368" height="184">
 
@@ -37,16 +37,20 @@
   alt="boomer 'sleeping'" width="114" height="168">
 
   <script>
-    // Function to make the image draggable with momentum during dragging
+    // Function to make the image draggable with drift
     function makeDraggable(imgId) {
       const img = document.getElementById(imgId);
       let offsetX = 0, offsetY = 0;
       let velocityX = 0, velocityY = 0;
+      let isDragging = false;
       const friction = 0.95; // Controls how much the image slows down during drag
-      const dragFactor = 0.1; // Controls how "heavy" the drag feels
+      const dragFactor = 0.05; // Controls how "heavy" the drag feels
 
       // When mouse is pressed down, start dragging
       img.addEventListener('mousedown', (e) => {
+        isDragging = true;
+
+        // Get the mouse's relative position within the image
         offsetX = e.clientX - img.getBoundingClientRect().left;
         offsetY = e.clientY - img.getBoundingClientRect().top;
 
@@ -54,49 +58,61 @@
         velocityX = 0;
         velocityY = 0;
 
-        document.body.style.userSelect = 'none'; // Disable text selection while dragging
+        // Disable text selection while dragging
+        document.body.style.userSelect = 'none'; 
+        // Start listening to mouse movements
         document.addEventListener('mousemove', moveImage);
       });
 
-      // Function to move the image with physics during drag (drag based on relative mouse movement)
+      // Function to move the image based on mouse movement
       function moveImage(e) {
+        if (!isDragging) return;
+
+        // Get the current mouse position
         const mouseX = e.clientX;
         const mouseY = e.clientY;
 
-        // Calculate the distance between the initial click and current mouse position
+        // Calculate the change in position based on mouse movement
         const deltaX = mouseX - offsetX - parseFloat(img.style.left || 0);
         const deltaY = mouseY - offsetY - parseFloat(img.style.top || 0);
 
-        // Apply velocity and simulate friction based on the mouse movement
+        // Calculate velocity (inertia effect)
         velocityX = deltaX * dragFactor;
         velocityY = deltaY * dragFactor;
 
-        // Move the image with velocity (but without sticking it to the mouse)
+        // Apply the velocity to the image, giving it a "drifting" effect
         img.style.left = parseFloat(img.style.left || 0) + velocityX + 'px';
         img.style.top = parseFloat(img.style.top || 0) + velocityY + 'px';
       }
 
-      // When mouse is released, stop the drag but still apply friction to stop the movement smoothly
+      // When mouse is released, stop the drag but apply friction to stop movement smoothly
       document.addEventListener('mouseup', () => {
-        document.body.style.userSelect = 'auto'; // Re-enable text selection
+        if (!isDragging) return;
+
+        isDragging = false;
+        // Re-enable text selection
+        document.body.style.userSelect = 'auto'; 
+        // Stop listening to mouse movements
         document.removeEventListener('mousemove', moveImage);
 
-        // Apply friction to velocity for smooth stop
+        // Apply friction to velocity to simulate the drifting stop
         const stopMovement = setInterval(() => {
           if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) {
-            clearInterval(stopMovement); // Stop the movement once it slows down
+            clearInterval(stopMovement); // Stop the movement once it slows down enough
           }
 
+          // Apply friction to reduce velocity
           velocityX *= friction;
           velocityY *= friction;
 
+          // Update the image's position based on the remaining velocity
           img.style.left = parseFloat(img.style.left || 0) + velocityX + 'px';
           img.style.top = parseFloat(img.style.top || 0) + velocityY + 'px';
         }, 16); // 60 FPS (16ms interval)
       });
     }
 
-    // Make all the images draggable with physics during dragging
+    // Make all the images draggable with momentum during dragging
     makeDraggable('image1');
     makeDraggable('image2');
     makeDraggable('image3');
