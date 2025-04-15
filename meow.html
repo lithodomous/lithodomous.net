@@ -1,15 +1,107 @@
-<body style ="background-color:black">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draggable Images with Momentum</title>
+  <style>
+    body {
+      background-color: black;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    img {
+      position: absolute;
+      cursor: pointer;
+      z-index: 1000; /* Ensures images stay on top */
+    }
+  </style>
+</head>
+<body>
 
-  <p style="text-align: center;"><img src="https://www.dropbox.com/scl/fi/gp3owd52tve3hpv5dnxvv/2025-04-15-BOOMER.gif?rlkey=6y3cwryaqaucj1254ik6ngigc&amp;st=7qvzgr5g&amp;dl=1" alt="BOOMER" width="368" height="184" /></p>
+  <!-- Images to be dragged -->
+  <img id="image1" src="https://www.dropbox.com/scl/fi/gp3owd52tve3hpv5dnxvv/2025-04-15-BOOMER.gif?rlkey=6y3cwryaqaucj1254ik6ngigc&amp;st=7qvzgr5g&amp;dl=1" 
+  alt="BOOMER" width="368" height="184">
 
+  <img id="image2" src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" 
+  alt="boomer 'sleeping'" width="114" height="168">
 
+  <img id="image3" src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" 
+  alt="boomer 'sleeping'" width="114" height="168">
 
-<p style="text-align: center;"><img src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" alt="boomer 'sleeping'" width="114" height="168" />
-  
-  <img src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" alt="boomer 'sleeping'" width="114" height="168" />
-  
-  <img src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" alt="boomer 'sleeping'" width="114" height="168" />
-  
-  <img src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" alt="boomer 'sleeping'" width="114" height="168" /></p>
+  <img id="image4" src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" 
+  alt="boomer 'sleeping'" width="114" height="168">
 
+  <img id="image5" src="https://www.dropbox.com/scl/fi/ooal2k9hw50nq9ufag7zo/booemrsleep.png?rlkey=cb1xf5n0ddanxzknwytc8y27f&amp;st=do3xbmld&amp;dl=1" 
+  alt="boomer 'sleeping'" width="114" height="168">
+
+  <script>
+    // Function to make the image draggable with momentum during dragging
+    function makeDraggable(imgId) {
+      const img = document.getElementById(imgId);
+      let offsetX = 0, offsetY = 0;
+      let velocityX = 0, velocityY = 0;
+      const friction = 0.95; // Controls how much the image slows down during drag
+      const dragFactor = 0.1; // Controls how "heavy" the drag feels
+
+      // When mouse is pressed down, start dragging
+      img.addEventListener('mousedown', (e) => {
+        offsetX = e.clientX - img.getBoundingClientRect().left;
+        offsetY = e.clientY - img.getBoundingClientRect().top;
+
+        // Stop any ongoing velocity
+        velocityX = 0;
+        velocityY = 0;
+
+        document.body.style.userSelect = 'none'; // Disable text selection while dragging
+        document.addEventListener('mousemove', moveImage);
+      });
+
+      // Function to move the image with physics during drag (drag based on relative mouse movement)
+      function moveImage(e) {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        // Calculate the distance between the initial click and current mouse position
+        const deltaX = mouseX - offsetX - parseFloat(img.style.left || 0);
+        const deltaY = mouseY - offsetY - parseFloat(img.style.top || 0);
+
+        // Apply velocity and simulate friction based on the mouse movement
+        velocityX = deltaX * dragFactor;
+        velocityY = deltaY * dragFactor;
+
+        // Move the image with velocity (but without sticking it to the mouse)
+        img.style.left = parseFloat(img.style.left || 0) + velocityX + 'px';
+        img.style.top = parseFloat(img.style.top || 0) + velocityY + 'px';
+      }
+
+      // When mouse is released, stop the drag but still apply friction to stop the movement smoothly
+      document.addEventListener('mouseup', () => {
+        document.body.style.userSelect = 'auto'; // Re-enable text selection
+        document.removeEventListener('mousemove', moveImage);
+
+        // Apply friction to velocity for smooth stop
+        const stopMovement = setInterval(() => {
+          if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) {
+            clearInterval(stopMovement); // Stop the movement once it slows down
+          }
+
+          velocityX *= friction;
+          velocityY *= friction;
+
+          img.style.left = parseFloat(img.style.left || 0) + velocityX + 'px';
+          img.style.top = parseFloat(img.style.top || 0) + velocityY + 'px';
+        }, 16); // 60 FPS (16ms interval)
+      });
+    }
+
+    // Make all the images draggable with physics during dragging
+    makeDraggable('image1');
+    makeDraggable('image2');
+    makeDraggable('image3');
+    makeDraggable('image4');
+    makeDraggable('image5');
+  </script>
 </body>
+</html>
