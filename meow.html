@@ -3,77 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Centered Images</title>
-  <style>
+  <title>Centered Images</title> <style>
     body {
       background-color: black;
       margin: 0;
       padding: 0;
-      overflow: hidden;
     }
 
     img {
+      /* Keep absolute positioning if you still want to center it manually */
       position: absolute;
       cursor: pointer;
       user-select: none;
+      /* Added styles to center the single image */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top text image -->
-  <img id="textImage" src="https://raw.githubusercontent.com/lithodomous/lithodomous.net/main/images/2025-04-15-BOOMER.gif" 
+  <img id="textImage" src="images/2025-04-15-BOOMER.gif"
   alt="BOOMER" width="368" height="184">
 
-  <!-- Row of images -->
-  <img id="image2" src="https://raw.githubusercontent.com/lithodomous/lithodomous.net/main/images/booemrsleep.png" width="114" height="168">
-  <img id="image3" src="https://raw.githubusercontent.com/lithodomous/lithodomous.net/main/images/booemrsleep.png" width="114" height="168">
-  <img id="image4" src="https://raw.githubusercontent.com/lithodomous/lithodomous.net/main/images/booemrsleep.png" width="114" height="168">
-  <img id="image5" src="https://raw.githubusercontent.com/lithodomous/lithodomous.net/main/images/booemrsleep.png" width="114" height="168">
-
-  <script>
-    window.addEventListener('load', () => {
-      const textImg = document.getElementById('textImage');
-      const imageIds = ['image2', 'image3', 'image4', 'image5'];
-      const images = imageIds.map(id => document.getElementById(id));
-      const allImages = [textImg, ...images];
-
-      let loadedCount = 0;
-
-      allImages.forEach(img => {
-        if (img.complete) {
-          loadedCount++;
-          if (loadedCount === allImages.length) positionImages();
-        } else {
-          img.onload = () => {
-            loadedCount++;
-            if (loadedCount === allImages.length) positionImages();
-          };
-        }
-      });
-
-      function positionImages() {
-        // Position the text image top center
-        const textW = textImg.offsetWidth;
-        const textH = textImg.offsetHeight;
-        const textLeft = window.innerWidth / 2 - textW / 2;
-        const textTop = window.innerHeight * 0.2 - textH / 2;
-        textImg.style.left = `${textLeft}px`;
-        textImg.style.top = `${textTop}px`;
-
-        // Position row of images centered beneath text
-        const gap = 20;
-        const totalRowWidth = images.reduce((sum, img) => sum + img.offsetWidth, 0) + gap * (images.length - 1);
-        let startX = window.innerWidth / 2 - totalRowWidth / 2;
-        const rowY = textTop + textH + 50;
-
-        images.forEach(img => {
-          img.style.left = `${startX}px`;
-          img.style.top = `${rowY}px`;
-          startX += img.offsetWidth + gap;
-        });
-      }
-    });
-  </script>
-</body>
+  </body>
 </html>
