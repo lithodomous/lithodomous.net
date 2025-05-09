@@ -41,24 +41,18 @@ I made this website as my personal creative stomping grounds, and hope to grow i
 </table>
 
 <script>
-        // Your birth year and month (replace with your actual birth year and month)
-        const birthYear = 2001; // Replace with your birth year
-        const birthMonth = 9;   // Replace with your birth month (1 = January, 12 = December)
+        const birthYear = 2001;
+        const birthMonth = 9;
 
         // Function to calculate age
         function calculateAge(birthYear, birthMonth) {
             const today = new Date();
             let age = today.getFullYear() - birthYear;
-            
-            // If the birthday hasn't occurred yet this year, subtract 1 from age
             if (today.getMonth() + 1 < birthMonth) {
                 age--;
             }
-
             return age;
         }
-
-        // Display the calculated age inside the span with id="age"
         document.getElementById("age").textContent = calculateAge(birthYear, birthMonth);
     </script>
 
