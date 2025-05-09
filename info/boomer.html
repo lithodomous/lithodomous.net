@@ -1,1 +1,349 @@
+<!DOCTYPE html>
+/* All physics made with the support of Gemini AI*/
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boomer!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: black;
+            position: relative; /* Needed for absolute positioning of images */
+            width: 100vw;
+            height: 100vh;
+        }
 
+        .physics-image {
+            position: absolute;
+            cursor: grab; /* Indicate draggable */
+            user-select: none; /* Prevent text selection on drag */
+            /* Add a border or outline for visibility if needed */
+            /* border: 1px solid white; */
+        }
+
+        .physics-image:active {
+            cursor: grabbing; /* Indicate dragging */
+        }
+
+        #home-link {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 12px;
+            color: white;
+            text-decoration: none;
+            z-index: 10; /* Ensure link is above images */
+        }
+    </style>
+</head>
+
+<table style="background-color:white; align: center; height: 30px; width: 280px; margin-left: auto; margin-right: auto;" border="10" cellpadding="10">
+<tbody>
+<tr style="height: 30px;">
+<td style="width: 253px; height: 30px; position: relative; text-align: center; vertical-align: top;">
+<h4 style="text-align: center;"><strong>ABOUT BOOMER</strong></h4>
+<p style="font-size: 12px; text-align: left;">
+Boomer is a <span id="age"></span> year old manx tomcat, and my special little guy!</br>
+</br>
+His personality is quite cuddly and food motivated. Currently he knows how to: follow, paw, lay down, and go to a pointed spot. 
+</br>
+</br>
+A favorite things about him is that he hops like a bunny due to being manx, super cute!!
+</br>
+</br>
+
+<script>
+        const birthYear = 2012;
+        const birthMonth = 9;
+
+        // Function to calculate age
+        function calculateAge(birthYear, birthMonth) {
+            const today = new Date();
+            let age = today.getFullYear() - birthYear;
+            if (today.getMonth() + 1 < birthMonth) {
+                age--;
+            }
+            return age;
+        }
+        document.getElementById("age").textContent = calculateAge(birthYear, birthMonth);
+    </script>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<body>
+
+    <div id="physics-container">
+        <img src="https://lithodomous.net/images/meow/booemrsleep.png" alt="Boomer" class="physics-image" width="100" height="140">
+        <img src="https://lithodomous.net/images/meow/boomer-sleep-2.png" alt="Boomer" class="physics-image" width="140" height="100">
+        <img src="https://lithodomous.net/images/meow/booemrsleep.png" alt="Boomer" class="physics-image" width="100" height="140">
+        <img src="https://lithodomous.net/images/meow/boomer-sleep-2.png" alt="Boomer" class="physics-image" width="100" height="140">
+        <img src="https://lithodomous.net/images/meow/booemrsleep.png" alt="Boomer" class="physics-image" width="100" height="140">
+    </div>
+
+    <a id="home-link" title="home" href="https://lithodomous.net/index.html">home</a>
+
+    <script>
+        const container = document.getElementById('physics-container');
+        const images = document.querySelectorAll('.physics-image');
+
+        // Physics properties for each image
+        const physicsObjects = [];
+        const elasticity = 0.8; // How much velocity is retained after bounce
+        const friction = 0.99; // Slows down objects over time
+        const gravity = 0; // Set to a value like 0.5 for a slight downward pull
+        const dragVelocityMultiplier = 0.2; // Decreased multiplier for less velocity
+
+        // Initialize physics properties for each image
+        images.forEach(img => {
+            // Set initial random position
+            const initialX = Math.random() * (window.innerWidth - img.offsetWidth);
+            const initialY = Math.random() * (window.innerHeight - img.offsetHeight);
+            img.style.left = `${initialX}px`;
+            img.style.top = `${initialY}px`;
+
+            physicsObjects.push({
+                element: img,
+                x: initialX,
+                y: initialY,
+                vx: (Math.random() - 0.5) * 5, // Random initial velocity
+                vy: (Math.random() - 0.5) * 5,
+                width: img.offsetWidth,
+                height: img.offsetHeight,
+                isDragging: false,
+                dragOffsetX: 0, // Offset from mouse/touch to image corner
+                dragOffsetY: 0,
+                dragStartX: 0, // Store drag start X position (image position)
+                dragStartY: 0   // Store drag start Y position (image position)
+            });
+        });
+
+        // Drag functionality
+        let activeObject = null;
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('physics-image')) {
+                e.preventDefault(); // Prevent default browser drag behavior
+                activeObject = physicsObjects.find(obj => obj.element === e.target);
+                if (activeObject) {
+                    activeObject.isDragging = true;
+                    // Calculate offset from mouse click to the image's top-left corner
+                    activeObject.dragOffsetX = e.clientX - activeObject.x;
+                    activeObject.dragOffsetY = e.clientY - activeObject.y;
+                    // Record start position for velocity calculation (using image's position)
+                    activeObject.dragStartX = activeObject.x;
+                    activeObject.dragStartY = activeObject.y;
+                    // Stop physics while dragging
+                    activeObject.vx = 0;
+                    activeObject.vy = 0;
+                    activeObject.element.style.cursor = 'grabbing';
+                }
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (activeObject && activeObject.isDragging) {
+                // Update the image's position based on the cursor and the initial offset
+                activeObject.x = e.clientX - activeObject.dragOffsetX;
+                activeObject.y = e.clientY - activeObject.dragOffsetY;
+
+                // Constrain to window boundaries while dragging
+                activeObject.x = Math.max(0, Math.min(activeObject.x, window.innerWidth - activeObject.width));
+                activeObject.y = Math.max(0, Math.min(activeObject.y, window.innerHeight - activeObject.height));
+
+                // Update the element's CSS position
+                activeObject.element.style.left = `${activeObject.x}px`;
+                activeObject.element.style.top = `${activeObject.y}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (activeObject) {
+                // Calculate and apply velocity based on the drag distance (difference between start and end image position)
+                activeObject.vx = (activeObject.x - activeObject.dragStartX) * dragVelocityMultiplier;
+                activeObject.vy = (activeObject.y - activeObject.dragStartY) * dragVelocityMultiplier;
+
+                // Ensure dragging is explicitly turned off *before* clearing activeObject
+                activeObject.isDragging = false;
+                activeObject.element.style.cursor = 'grab';
+
+                // Clear the active object reference *after* calculating velocity and turning off dragging
+                activeObject = null;
+
+                // Optional: Add a small log to confirm state change
+                console.log("Mouse up: isDragging set to false, activeObject set to null");
+            }
+        });
+
+         // Touch event listeners for dragging on mobile
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.classList.contains('physics-image')) {
+                e.preventDefault(); // Prevent default touch behavior (like scrolling)
+                activeObject = physicsObjects.find(obj => obj.element === e.target);
+                if (activeObject) {
+                    activeObject.isDragging = true;
+                    const touch = e.touches[0];
+                     // Calculate offset from touch point to the image's top-left corner
+                    activeObject.dragOffsetX = touch.clientX - activeObject.x;
+                    activeObject.dragOffsetY = touch.clientY - activeObject.y;
+                     // Record start position for velocity calculation (using image's position)
+                    activeObject.dragStartX = activeObject.x;
+                    activeObject.dragStartY = activeObject.y;
+
+                    activeObject.vx = 0;
+                    activeObject.vy = 0;
+                    activeObject.element.style.cursor = 'grabbing'; // Visual cue (might not work on all touch devices)
+                }
+            }
+        }, { passive: false }); // Use passive: false to allow preventDefault
+
+        document.addEventListener('touchmove', (e) => {
+            if (activeObject && activeObject.isDragging) {
+                 e.preventDefault(); // Prevent default touch behavior (like scrolling)
+                const touch = e.touches[0];
+                 // Update the image's position based on the touch point and the initial offset
+                activeObject.x = touch.clientX - activeObject.dragOffsetX;
+                activeObject.y = touch.clientY - activeObject.dragOffsetY;
+
+                 // Constrain to window boundaries while dragging
+                activeObject.x = Math.max(0, Math.min(activeObject.x, window.innerWidth - activeObject.width));
+                activeObject.y = Math.max(0, Math.min(activeObject.y, window.innerHeight - activeObject.height));
+
+                 // Update the element's CSS position
+                activeObject.element.style.left = `${activeObject.x}px`;
+                activeObject.element.style.top = `${activeObject.y}px`;
+            }
+        }, { passive: false }); // Use passive: false to allow preventDefault
+
+
+        document.addEventListener('touchend', (e) => {
+            if (activeObject) {
+                const touch = e.changedTouches[0]; // Use changedTouches for touchend
+
+                 // Calculate and apply velocity based on the drag distance (difference between start and end image position)
+                activeObject.vx = (activeObject.x - activeObject.dragStartX) * dragVelocityMultiplier;
+                activeObject.vy = (activeObject.y - activeObject.dragStartY) * dragVelocityMultiplier;
+
+                 // Ensure dragging is explicitly turned off *before* clearing activeObject
+                activeObject.isDragging = false;
+                 activeObject.element.style.cursor = 'grab';
+
+                // Clear the active object reference *after* calculating velocity and turning off dragging
+                activeObject = null;
+
+                 // Optional: Add a small log to confirm state change
+                 console.log("Touch end: isDragging set to false, activeObject set to null");
+            }
+        });
+
+
+        // Physics update loop
+        function updatePhysics() {
+            physicsObjects.forEach(obj => {
+                if (!obj.isDragging) { // Only update physics for non-dragging objects
+                    // Apply gravity
+                    obj.vy += gravity;
+
+                    // Apply friction
+                    obj.vx *= friction;
+                    obj.vy *= friction;
+
+                    // Update position based on velocity
+                    obj.x += obj.vx;
+                    obj.y += obj.vy;
+
+                    // Wall collision detection and response
+                    if (obj.x < 0) {
+                        obj.x = 0;
+                        obj.vx *= -elasticity;
+                    } else if (obj.x + obj.width > window.innerWidth) {
+                        obj.x = window.innerWidth - obj.width;
+                        obj.vx *= -elasticity;
+                    }
+
+                    if (obj.y < 0) {
+                        obj.y = 0;
+                        obj.vy *= -elasticity;
+                    } else if (obj.y + obj.height > window.innerHeight) {
+                        obj.y = window.innerHeight - obj.height;
+                        obj.vy *= -elasticity;
+                    }
+
+                    // Object-to-object collision detection and response
+                    physicsObjects.forEach(otherObj => {
+                        if (obj !== otherObj && !otherObj.isDragging) { // Don't check collision with self or dragging objects
+                            // Simple AABB collision detection
+                            if (obj.x < otherObj.x + otherObj.width &&
+                                obj.x + obj.width > otherObj.x &&
+                                obj.y < otherObj.y + otherObj.height &&
+                                obj.y + otherObj.height > otherObj.y) {
+
+                                // Collision detected - simple response
+                                // Calculate overlap
+                                const overlapX = Math.min(obj.x + obj.width, otherObj.x + otherObj.width) - Math.max(obj.x, otherObj.x);
+                                const overlapY = Math.min(obj.y + obj.height, otherObj.y + otherObj.height) - Math.max(obj.y, otherObj.y);
+
+                                // Resolve overlap by pushing apart along the axis of least overlap
+                                if (overlapX < overlapY) {
+                                    if (obj.x < otherObj.x) {
+                                        obj.x -= overlapX / 2;
+                                        otherObj.x += overlapX / 2;
+                                    } else {
+                                        obj.x += overlapX / 2;
+                                        otherObj.x -= overlapX / 2;
+                                    }
+                                     // Swap velocities (simple elastic collision)
+                                    [obj.vx, otherObj.vx] = [otherObj.vx * elasticity, obj.vx * elasticity];
+
+                                } else {
+                                    if (obj.y < otherObj.y) {
+                                        obj.y -= overlapY / 2;
+                                        otherObj.y += overlapY / 2;
+                                    } else {
+                                        obj.y += overlapY / 2;
+                                        otherObj.y -= overlapY / 2;
+                                    }
+                                    // Swap velocities (simple elastic collision)
+                                    [obj.vy, otherObj.vy] = [otherObj.vy * elasticity, obj.vy * elasticity];
+                                }
+                            }
+                        }
+                    });
+
+
+                    // Update element position
+                    obj.element.style.left = `${obj.x}px`;
+                    obj.element.style.top = `${obj.y}px`;
+                } else {
+                     // If dragging, keep the element's visual position in sync with its stored position
+                     // This is important if the physics loop is paused or slowed during drag
+                     obj.element.style.left = `${obj.x}px`;
+                     obj.element.style.top = `${obj.y}px`;
+                }
+            });
+
+            // Request the next frame
+            requestAnimationFrame(updatePhysics);
+        }
+
+        // Start the physics simulation
+        updatePhysics();
+
+         // Handle window resizing to update boundaries
+        window.addEventListener('resize', () => {
+            // Re-constrain objects to new boundaries on resize
+            physicsObjects.forEach(obj => {
+                 obj.x = Math.max(0, Math.min(obj.x, window.innerWidth - obj.width));
+                 obj.y = Math.max(0, Math.min(obj.y, window.innerHeight - obj.height));
+                 obj.element.style.left = `${obj.x}px`;
+                 obj.element.style.top = `${obj.y}px`;
+            });
+        });
+
+    </script>
+
+</body>
+</html>
