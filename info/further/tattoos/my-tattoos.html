@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +18,7 @@
     
 </head>
 <body>
-            <style>
+    <style>
         /* Styles for the new elements */
         #model-credit {
             position: absolute;
@@ -63,23 +62,31 @@
             background-color: #555;
         }
     </style>
-<h1>Rotate the model and select the tattoo to explore!</h1>
 
-<div id="3d-container">
-    <canvas id="webgl-canvas"></canvas>
-</div>
-
-<div id="modal-overlay" class="modal-hidden">
-    <div id="tattoo-modal">
-        <button class="modal-close-button">&times;</button>
-        <h2 id="tattoo-modal-title"></h2>
-        <img id="tattoo-modal-image" src="" alt="Tattoo Image">
-        <p id="tattoo-modal-description"></p>
-        <p id="tattoo-modal-artist"></p>
-        <p id="tattoo-modal-date"></p>
+    <div id="model-credit">
+        Model by <a href="https://www.fab.com/listings/6ea2f53a-fe66-4c16-8a6b-7ffa2037075c" target="_blank" rel="noopener noreferrer">Model by PolyOne Studio</a>
     </div>
-</div>
 
-<script type="module" src="script.js"></script>
+    <div id="home-button-container">
+        <a href="https://lithodomous.net/" id="home-button">Home</a>
+    </div>
+    <h1>Rotate the model and select the tattoo to explore!</h1>
+
+    <div id="3d-container">
+        <canvas id="webgl-canvas"></canvas>
+    </div>
+
+    <div id="modal-overlay" class="modal-hidden">
+        <div id="tattoo-modal">
+            <button class="modal-close-button">&times;</button>
+            <h2 id="tattoo-modal-title"></h2>
+            <img id="tattoo-modal-image" src="" alt="Tattoo Image">
+            <p id="tattoo-modal-description"></p>
+            <p id="tattoo-modal-artist"></p>
+            <p id="tattoo-modal-date"></p>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>
