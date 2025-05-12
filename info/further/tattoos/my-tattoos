@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jay's Tattoos</title>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three/examples/jsm/"
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="style.css?v=1.1">
+</head>
+<body>
+<h1>Rotate the model and select the tattoo to explore!</h1>
+
+<div id="3d-container">
+    <canvas id="webgl-canvas"></canvas>
+</div>
+
+<div id="modal-overlay" class="modal-hidden">
+    <div id="tattoo-modal">
+        <button class="modal-close-button">&times;</button>
+        <h2 id="tattoo-modal-title"></h2>
+        <img id="tattoo-modal-image" src="" alt="Tattoo Image">
+        <p id="tattoo-modal-description"></p>
+        <p id="tattoo-modal-artist"></p>
+        <p id="tattoo-modal-date"></p>
+    </div>
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
