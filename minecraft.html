@@ -1,117 +1,64 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-  <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>minecraft</title>
-
+  <style>
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+    }
+    a {
+      color: #55aaff;
+    }
+  </style>
 </head>
-
 <body>
-
   <div style="text-align: center;">
-
     <h3>Homosexual EX</h3>
-
     <h2>play.lithodomous.net</h2>
-
     <p>Welcome to my cobblemon server!</p>
-
     <div id="server-status"></div>
 
-
-    <!-- Download Mods Section -->
-
     <p><b>Download Mods for CurseForge Import:</b><br>
-
       <a href="https://www.dropbox.com/scl/fi/cx666dpak6ufut93i4k7e/Mods-for-Curseforge.zip?rlkey=2y1cbd00k04d56tss3wd3afoj&st=nsz5bpxb&dl=1" target="_blank">Modlist ZIP file</a><br>
-
     </p>
 
-
-    <!-- Tutorial Section -->
-
     <h3>Tutorial</h3>
-
     <p>Follow these steps to set up your mods:</p>
-
     <ol style="text-align: left; display: inline-block;">
-
       <li>Download the mods list from Dropbox above</li>
-
       <li>Install the CurseForge App (https://www.curseforge.com/download/app)</li>
-
       <li>Launch the CurseForge app and choose your Minecraft profile.</li>
-
       <li>Select import, next to "Create"</li>
-
       <li>Select the ZIP file you downloaded above</li>
-
       <li>Now your Profile should download and be ready for use</li>
-
     </ol>
-
-
-    <!-- Google Form (Ticket Stuff) moved below the tutorial -->
-
-    <h3>Ticket Submission</h3>
-
-    <p>If you need any support or have questions, please fill out the ticket below:</p>
-
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe6qjCb4NGN1MZD9DIZcqFqBJN70RPSxWDKl6kJtfyZHNL1Mg/viewform?embedded=true" width="640" height="540" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 
   </div>
 
-
-  <!-- Fetch server status and update the server-status div -->
-
   <script>
-
     fetch('https://api.mcsrvstat.us/3/play.lithodomous.net')
-
       .then(response => response.json())
-
       .then(data => {
-
         var serverStatusDiv = document.getElementById('server-status');
-
         if (data.online) {
-
           serverStatusDiv.innerHTML = `
-
             <h2><b>Online!</b></h2>
-
             <h2>${data.players.online}/${data.players.max}</h2>
-
           `;
-
         } else {
-
           serverStatusDiv.innerHTML = `
-
             <h2><b>Server is offline...</b></h2>
-
             <p><b>Reason:</b> MAINTENANCE</p>
-
           `;
-
         }
-
       })
-
       .catch(err => {
-
         console.error("Error fetching server status:", err);
-
+        var serverStatusDiv = document.getElementById('server-status');
+        serverStatusDiv.innerHTML = `<h2>Error fetching server status.</h2>`;
       });
-
   </script>
-
 </body>
-
-</html> 
+</html>
