@@ -1,4 +1,4 @@
-Lithodomous.net is my personal website, and my gateway to learning github and improving my code skills.
+Lithodomous.net is my personal website, and my gateway to learning github and improving my code skills. It's quite the frankenstein of code but its my monster...
 
 It's quite a mess, but it's my mess and a project I've wanted to work on since forever. (What internet-loving kid didn't want their own website!?)
 
